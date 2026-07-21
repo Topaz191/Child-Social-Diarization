@@ -1,7 +1,8 @@
-# CDA_readiness — 发言准备度集群训练包
+# CDA_readiness — 发言准备度（Speech Readiness）训练包
 
-不要上传整个 `CDA` 原仓库（含约 3GB+ 视频、legacy 实验与大量中间产物）。  
-本目录是为远程 GPU 训练准备的**精简工程**。
+面向远程 GPU / 超算的精简工程：从咸阳课堂视频抽取头部/嘴部时序特征，训练轻量 LSTM，预测「即将开口」概率。
+
+不要把完整 `CDA` 原仓库（含数 GB 视频与 legacy 产物）推到 GitHub；本仓库已用 `.gitignore` 排除视频与 `output/`。
 
 ## 目录结构
 
