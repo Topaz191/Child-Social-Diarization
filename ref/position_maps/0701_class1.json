@@ -1,0 +1,139 @@
+{
+  "version": 2,
+  "date": "0701",
+  "class_id": 1,
+  "excel": "202507-xianyang-小学生转录标注.xlsx",
+  "how_to_fill": [
+    "每个视频画面稳定入镜 3 名本组学生（左/中/右）；远处其他组人脸会被尺寸过滤掉。",
+    "打开对应 mp4，从观众视角按从左到右填写 left_to_right，必须是 3 个：S1/S2/S3 的一个排列。",
+    "文件名里的 S1S2/S2S3 只表示录音/剪辑机位，不代表画面只有两人。",
+    "核对无误后把 confirmed 改为 true。",
+    "T（老师）一般不写进 left_to_right。"
+  ],
+  "position_labels": {
+    "3人": ["左", "中", "右"]
+  },
+  "expected_in_frame": 3,
+  "videos": [
+    {
+      "video_name": "0701-前测-5年级1班-第1组-S2S3-小组汇报.mp4",
+      "rel_path": "0701\\class1\\0701-前测-5年级1班-第1组-S2S3-小组汇报.mp4",
+      "date": "0701",
+      "class_id": 1,
+      "grade": 5,
+      "group": 1,
+      "phase": "前测",
+      "test": "pre",
+      "sheet": "5-1-1",
+      "camera_tag": "S2S3",
+      "activity": "小组汇报",
+      "roster": {
+        "S1": "雷竣森",
+        "S2": "黄康靖瑶",
+        "S3": "陆苏昊"
+      },
+      "annotation_speakers_pre": {
+        "S1": 82,
+        "S2": 8,
+        "S3": 60,
+        "T": 12
+      },
+      "in_frame_expected": ["S1", "S2", "S3"],
+      "annotation_note": "综合S1和S2S3视角剪辑后的讨论视频转录，初始时间为8:33:39.0，两视频已完全对齐，没有缺帧",
+      "fill_hint": "请填画面 左/中/右 对应谁。预填占位 S1,S2,S3，请按实际座位改成正确排列。",
+      "left_to_right": ["S3", "S2", "S1"],
+      "confirmed": false,
+      "notes": ""
+    },
+    {
+      "video_name": "0701-前测-五年级1班-第2组-S1S2-小组讨论.mp4",
+      "rel_path": "0701\\class1\\0701-前测-五年级1班-第2组-S1S2-小组讨论.mp4",
+      "date": "0701",
+      "class_id": 1,
+      "grade": 5,
+      "group": 2,
+      "phase": "前测",
+      "test": "pre",
+      "sheet": "5-1-2",
+      "camera_tag": "S1S2",
+      "activity": "小组讨论",
+      "roster": {
+        "S1": "焦柯睿",
+        "S2": "雷俨路",
+        "S3": "王若麟"
+      },
+      "annotation_speakers_pre": {
+        "S1": 83,
+        "S2": 126,
+        "S3": 95,
+        "T": 9
+      },
+      "in_frame_expected": ["S1", "S2", "S3"],
+      "annotation_note": "指的是监控死角；使用S1S2视角转录，S3视角缺失时间戳",
+      "fill_hint": "请填画面 左/中/右 对应谁。预填占位 S1,S2,S3，请按实际座位改成正确排列。",
+      "left_to_right": ["S3", "S2", "S1"],
+      "confirmed": true,
+      "notes": ""
+    },
+    {
+      "video_name": "0701-前测-五年级1班-第3组-S1S2-小组展示.mp4",
+      "rel_path": "0701\\class1\\0701-前测-五年级1班-第3组-S1S2-小组展示.mp4",
+      "date": "0701",
+      "class_id": 1,
+      "grade": 5,
+      "group": 3,
+      "phase": "前测",
+      "test": "pre",
+      "sheet": "5-1-3",
+      "camera_tag": "S1S2",
+      "activity": "小组展示",
+      "roster": {
+        "S1": "杨浩鑫",
+        "S2": "田杜屿",
+        "S3": "丁载德"
+      },
+      "annotation_speakers_pre": {
+        "S1": 35,
+        "S2": 89,
+        "S3": 97,
+        "T": 14
+      },
+      "in_frame_expected": ["S1", "S2", "S3"],
+      "annotation_note": "S1S2视角时间，没有时间戳",
+      "fill_hint": "请填画面 左/中/右 对应谁。预填占位 S1,S2,S3，请按实际座位改成正确排列。",
+      "left_to_right": ["S3", "S2", "S1"],
+      "confirmed": false,
+      "notes": ""
+    },
+    {
+      "video_name": "0701-前测-五年级1班-第4组-S2S3-小组展示.mp4",
+      "rel_path": "0701\\class1\\0701-前测-五年级1班-第4组-S2S3-小组展示.mp4",
+      "date": "0701",
+      "class_id": 1,
+      "grade": 5,
+      "group": 4,
+      "phase": "前测",
+      "test": "pre",
+      "sheet": "5-1-4",
+      "camera_tag": "S2S3",
+      "activity": "小组展示",
+      "roster": {
+        "S1": "李耘啸",
+        "S2": "吴沫萱",
+        "S3": "杨宗坷"
+      },
+      "annotation_speakers_pre": {
+        "S1": 71,
+        "S2": 70,
+        "S3": 81,
+        "T": 7
+      },
+      "in_frame_expected": ["S1", "S2", "S3"],
+      "annotation_note": "S2S3视角，S1基本都在自言自语，第一帧绝对时间：8:33:38.6",
+      "fill_hint": "请填画面 左/中/右 对应谁。预填占位 S1,S2,S3，请按实际座位改成正确排列。",
+      "left_to_right": ["S3", "S2", "S1"],
+      "confirmed": false,
+      "notes": ""
+    }
+  ]
+}

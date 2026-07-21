@@ -1,0 +1,25 @@
+# 大文件 / 运行产物 — 视频请在集群侧单独下载
+video/**/*.mp4
+video/**/*.avi
+video/**/*.mkv
+output/**
+!output/.gitkeep
+!video/xianyang/.gitkeep
+
+__pycache__/
+**/__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.venv/
+venv/
+*.pt
+*.onnx
+*.engine
+*.npz
+.DS_Store
+Thumbs.db
+logs/
+*.log
+.idea/
+.vscode/
