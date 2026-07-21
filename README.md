@@ -4,6 +4,33 @@
 
 不要把完整 `CDA` 原仓库（含数 GB 视频与 legacy 产物）推到 GitHub；本仓库已用 `.gitignore` 排除视频与 `output/`。
 
+## GitHub 使用
+
+本目录已初始化为 git 仓库（`main`）。首次推送到 GitHub：
+
+1. 在 https://github.com/new 新建空仓库（建议名：`CDA-readiness`，不要勾选自动添加 README）
+2. 在本机执行（把 `YOUR_USER` 换成你的 GitHub 用户名）：
+
+```bash
+cd CDA_readiness
+git remote add origin https://github.com/YOUR_USER/CDA-readiness.git
+git push -u origin main
+```
+
+之后日常同步：
+
+```bash
+git add -A
+git commit -m "描述本次改动"
+git push
+```
+
+集群侧可直接：
+
+```bash
+git clone https://github.com/YOUR_USER/CDA-readiness.git
+```
+
 ## 目录结构
 
 ```text
