@@ -1,0 +1,136 @@
+{
+  "version": 1,
+  "date": "0701",
+  "class_id": 2,
+  "excel": "202507-xianyang-小学生转录标注.xlsx",
+  "how_to_fill": [
+    "每个视频画面稳定入镜 3 名本组学生（左/中/右）；远处其他组人脸会被尺寸过滤掉。",
+    "打开对应 mp4，从观众视角按从左到右填写 left_to_right，必须是 3 个：S1/S2/S3 的一个排列。",
+    "文件名里的 S1S2/S2S3 只表示录音/剪辑机位，不代表画面只有两人。",
+    "核对无误后把 confirmed 改为 true。",
+    "T（老师）一般不写进 left_to_right。"
+  ],
+  "position_labels": {
+    "3人": [
+      "左",
+      "中",
+      "右"
+    ]
+  },
+  "expected_in_frame": 3,
+  "videos": [
+    {
+      "video_name": "0701-前测-五年级2班-第1组-S2S3-小组讨论.mp4",
+      "rel_path": "0701\\class2\\0701-前测-五年级2班-第1组-S2S3-小组讨论.mp4",
+      "date": "0701",
+      "class_id": 2,
+      "grade": 5,
+      "group": 1,
+      "phase": "前测",
+      "test": "pre",
+      "sheet": "5-2-1",
+      "camera_tag": "S2S3",
+      "activity": "小组讨论",
+      "roster": {},
+      "in_frame_expected": [
+        "S1",
+        "S2",
+        "S3"
+      ],
+      "annotation_note": "参考S2S3视角，开始时间09:25:02.4（S2S3视角噪声严重，本组人声无法听清；S1视角声音混为其他组声音）",
+      "left_to_right": [
+        "S3",
+        "S2",
+        "S1"
+      ],
+      "confirmed": true,
+      "notes": ""
+    },
+    {
+      "video_name": "0701-前测-五年级2班-第2组-S1S2-小组讨论.mp4",
+      "rel_path": "0701\\class2\\0701-前测-五年级2班-第2组-S1S2-小组讨论.mp4",
+      "date": "0701",
+      "class_id": 2,
+      "grade": 5,
+      "group": 2,
+      "phase": "前测",
+      "test": "pre",
+      "sheet": "5-2-2",
+      "camera_tag": "S1S2",
+      "activity": "小组讨论",
+      "roster": {
+        "S1": "S1",
+        "S2": "S2",
+        "S3": "S3"
+      },
+      "in_frame_expected": [
+        "S1",
+        "S2",
+        "S3"
+      ],
+      "annotation_note": "视频有问题只有S1S2视角，讨论只有前半，第一帧为9:25:00.9",
+      "left_to_right": [
+        "S3",
+        "S2",
+        "S1"
+      ],
+      "confirmed": true,
+      "notes": ""
+    },
+    {
+      "video_name": "0701-前测-五年级2班-第3组-S1S2-小组讨论-1.mp4",
+      "rel_path": "0701\\class2\\0701-前测-五年级2班-第3组-S1S2-小组讨论-1.mp4",
+      "date": "0701",
+      "class_id": 2,
+      "grade": 5,
+      "group": 3,
+      "phase": "前测",
+      "test": "pre",
+      "sheet": "5-2-3",
+      "camera_tag": "S1S2",
+      "activity": "小组讨论-1",
+      "roster": {
+        "S1": "罗赟源",
+        "S2": "贺琳舒",
+        "S3": "胡梓瑜"
+      },
+      "in_frame_expected": [
+        "S1",
+        "S2",
+        "S3"
+      ],
+      "annotation_note": "0701-2班-第3组-S1由华为平板录制，因软件闪退未保存录像；视频为S2S3视角时间，没有时间戳水印，只有相对时间；S1被水杯遮挡，视线极有可能有大的缺失",
+      "left_to_right": [
+        "S3",
+        "S2",
+        "S1"
+      ],
+      "confirmed": true,
+      "notes": ""
+    },
+    {
+      "video_name": "0701-前测-五年级2班-第4组-S2S3-小组讨论.mp4",
+      "rel_path": "0701\\class2\\0701-前测-五年级2班-第4组-S2S3-小组讨论.mp4",
+      "date": "0701",
+      "class_id": 2,
+      "grade": 5,
+      "group": 4,
+      "phase": "前测",
+      "test": "pre",
+      "sheet": "5-2-4",
+      "camera_tag": "S2S3",
+      "activity": "小组讨论",
+      "roster": {
+        "S1": "李嘉轶",
+        "S2": "牟淑瑶",
+        "S3": "张孜越"
+      },
+      "in_frame_expected": ["S1", "S2", "S3"],
+      "annotation_note": "综合S1和S2S3视角剪辑后的小组讨论视频转录，S1视角的首帧时间为9:24:57.4，S2S3视角视频的首帧时间为9:24:58.3。两视频时间在秒上已对齐，在毫秒上有区别但忽略。当前转录以S2S3视角为准。另外，s2s3视角中因为s2水杯太大有点遮挡s2，s1视角中因为s2低头写字，会遮挡s1",
+      "fill_hint": "请填画面 左/中/右 对应谁。预填占位 S1,S2,S3，请按实际座位改成正确排列。",
+      "left_to_right": ["S3", "S2", "S1"],
+      "confirmed": false,
+      "notes": ""
+    }
+  ]
+}
