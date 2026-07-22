@@ -43,11 +43,11 @@
       ],
       "annotation_note": "综合S1和S2S3视角剪辑后的讨论视频转录，初始时间为8:33:39.0，两视频已完全对齐，没有缺帧",
       "left_to_right": [
-        "S1",
+        "S3",
         "S2",
-        "S3"
+        "S1"
       ],
-      "confirmed": false,
+      "confirmed": true,
       "notes": ""
     },
     {
@@ -74,11 +74,11 @@
       ],
       "annotation_note": "指的是监控死角；使用S1S2视角转录，S3视角缺失时间戳",
       "left_to_right": [
-        "S1",
+        "S3",
         "S2",
-        "S3"
+        "S1"
       ],
-      "confirmed": false,
+      "confirmed": true,
       "notes": ""
     },
     {
@@ -105,11 +105,11 @@
       ],
       "annotation_note": "S1S2视角时间，没有时间戳",
       "left_to_right": [
-        "S1",
+        "S3",
         "S2",
-        "S3"
+        "S1"
       ],
-      "confirmed": false,
+      "confirmed": true,
       "notes": ""
     },
     {
@@ -136,11 +136,11 @@
       ],
       "annotation_note": "S2S3视角，S1基本都在自言自语，第一帧绝对时间：8:33:38.6",
       "left_to_right": [
-        "S1",
+        "S3",
         "S2",
-        "S3"
+        "S1"
       ],
-      "confirmed": false,
+      "confirmed": true,
       "notes": ""
     }
   ]
