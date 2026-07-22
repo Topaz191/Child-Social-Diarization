@@ -357,6 +357,7 @@ def process_one(
         logger.warning("未找到 confirmed 位置标注，回退默认左中右 S1,S2,S3（请尽快人工确认）")
 
     out_dir = out_root / f"{parsed['date']}_{parsed['sheet']}_{parsed['test']}_{parsed['camera_tag']}"
+    out_dir.mkdir(parents=True, exist_ok=True)
     feat_csv = out_dir / "frame_features.csv"
     speakers = STUDENT_SPEAKERS if student_only else None
     segments = load_xianyang_segments(
