@@ -11,7 +11,8 @@ openpyxl>=3.0.0
 torch>=1.12.0
 
 # 视觉特征抽取
-mediapipe>=0.10.0
+# 必须带 solutions API（Face Mesh）。过新的 mediapipe 在部分 Linux 上会去掉 mp.solutions
+mediapipe==0.10.14
 ultralytics>=8.0.0
 insightface>=0.7.3
 onnxruntime-gpu>=1.14.0

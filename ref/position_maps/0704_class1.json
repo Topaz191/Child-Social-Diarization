@@ -1,12 +1,13 @@
 {
   "version": 1,
-  "date": "0701",
+  "date": "0704",
   "class_id": 1,
   "excel": "202507-xianyang-小学生转录标注.xlsx",
   "how_to_fill": [
     "每个视频画面稳定入镜 3 名本组学生（左/中/右）；远处其他组人脸会被尺寸过滤掉。",
     "打开对应 mp4，从观众视角按从左到右填写 left_to_right，必须是 3 个：S1/S2/S3 的一个排列。",
     "文件名里的 S1S2/S2S3 只表示录音/剪辑机位，不代表画面只有两人。",
+    "模板默认按 Excel 各组生成；video_name 为占位猜测，若与真实文件名不一致请改正。",
     "核对无误后把 confirmed 改为 true。",
     "T（老师）一般不写进 left_to_right。"
   ],
@@ -20,9 +21,9 @@
   "expected_in_frame": 3,
   "videos": [
     {
-      "video_name": "0701-前测-五年级1班-第1组-S2S3-讨论.mp4",
-      "rel_path": "0701\\class1\\0701-前测-五年级1班-第1组-S2S3-讨论.mp4",
-      "date": "0701",
+      "video_name": "0704-前测-五年级1班-第1组-S2S3-讨论.mp4",
+      "rel_path": "0704\\class1\\0704-前测-五年级1班-第1组-S2S3-讨论.mp4",
+      "date": "0704",
       "class_id": 1,
       "grade": 5,
       "group": 1,
@@ -53,9 +54,9 @@
       "video_start_abs_str": "8:33:39"
     },
     {
-      "video_name": "0701-前测-五年级1班-第2组-S1S2-讨论.mp4",
-      "rel_path": "0701\\class1\\0701-前测-五年级1班-第2组-S1S2-讨论.mp4",
-      "date": "0701",
+      "video_name": "0704-前测-五年级1班-第2组-S1S2-讨论.mp4",
+      "rel_path": "0704\\class1\\0704-前测-五年级1班-第2组-S1S2-讨论.mp4",
+      "date": "0704",
       "class_id": 1,
       "grade": 5,
       "group": 2,
@@ -70,9 +71,9 @@
         "S3": "王若麟"
       },
       "in_frame_expected": [
-        "S1",
+        "S3",
         "S2",
-        "S3"
+        "S1"
       ],
       "annotation_note": "指的是监控死角；使用S1S2视角转录，S3视角缺失时间戳",
       "left_to_right": [
@@ -86,9 +87,9 @@
       "video_start_abs_str": null
     },
     {
-      "video_name": "0701-前测-五年级1班-第3组-S1S2-讨论.mp4",
-      "rel_path": "0701\\class1\\0701-前测-五年级1班-第3组-S1S2-讨论.mp4",
-      "date": "0701",
+      "video_name": "0704-前测-五年级1班-第3组-S1S2-讨论.mp4",
+      "rel_path": "0704\\class1\\0704-前测-五年级1班-第3组-S1S2-讨论.mp4",
+      "date": "0704",
       "class_id": 1,
       "grade": 5,
       "group": 3,
@@ -103,9 +104,9 @@
         "S3": "丁载德"
       },
       "in_frame_expected": [
-        "S1",
+        "S3",
         "S2",
-        "S3"
+        "S1"
       ],
       "annotation_note": "S1S2视角时间，没有时间戳",
       "left_to_right": [
@@ -119,9 +120,9 @@
       "video_start_abs_str": null
     },
     {
-      "video_name": "0701-前测-五年级1班-第4组-S2S3-讨论.mp4",
-      "rel_path": "0701\\class1\\0701-前测-五年级1班-第4组-S2S3-讨论.mp4",
-      "date": "0701",
+      "video_name": "0704-前测-五年级1班-第4组-S2S3-讨论.mp4",
+      "rel_path": "0704\\class1\\0704-前测-五年级1班-第4组-S2S3-讨论.mp4",
+      "date": "0704",
       "class_id": 1,
       "grade": 5,
       "group": 4,

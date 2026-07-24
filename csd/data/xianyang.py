@@ -105,6 +105,148 @@ def parse_time_to_seconds(value: Any) -> Optional[float]:
     return None
 
 
+def format_seconds_as_clock(sec: float) -> str:
+    """秒（自 0 点）→ H:MM:SS.x / HH:MM:SS.x。"""
+    if sec < 0:
+        sec = 0.0
+    h = int(sec // 3600)
+    m = int((sec % 3600) // 60)
+    s = sec - h * 3600 - m * 60
+    if abs(s - round(s)) < 1e-6:
+        return f"{h}:{m:02d}:{int(round(s)):02d}"
+    text = f"{h}:{m:02d}:{s:06.3f}".rstrip("0").rstrip(".")
+    return text
+
+
+_CLOCK_TOKEN = r"([0-2]?\d)[:：]([0-5]?\d)[:：]([0-5]?\d(?:\.\d+)?)"
+_VIDEO_START_PATTERNS = [
+    # 优先：带机位的首帧时间
+    re.compile(
+        rf"(?P<cam>S\d(?:S\d)*)\s*视角[^。；;\n]{{0,24}}首帧时间\s*[=:：为]?\s*{_CLOCK_TOKEN}",
+        re.IGNORECASE,
+    ),
+    re.compile(
+        rf"首帧时间[^。；;\n]{{0,12}}(?P<cam>S\d(?:S\d)*)\s*视角\s*[=:：为]?\s*{_CLOCK_TOKEN}",
+        re.IGNORECASE,
+    ),
+    # 通用：开始/起始/初始/第一帧/北京时间
+    re.compile(
+        rf"(?:开始时间|起始时间|初始时间|第一帧(?:绝对时间)?|视频开始的北京时间|北京时间)"
+        rf"\s*[=:：为]?\s*{_CLOCK_TOKEN}"
+    ),
+]
+
+
+def parse_video_start_abs_from_note(
+    note: Optional[str],
+    camera_tag: Optional[str] = None,
+) -> Tuple[Optional[float], Optional[str]]:
+    """
+    从 annotation_note 解析视频第 0 帧对应的绝对时刻（自 0 点起的秒）。
+
+    返回 (seconds, display_str)。找不到或明确写无时间戳时返回 (None, None)。
+    """
+    if note is None:
+        return None, None
+    text = str(note).strip()
+    if not text:
+        return None, None
+    if re.search(r"没有时间戳|无时间戳|无时间水印|没有时间水印", text):
+        # 仍可能后文写了别的视角时间；不直接 return，继续匹配
+        pass
+
+    cam = (camera_tag or "").upper().replace(" ", "")
+    candidates: List[Tuple[float, str, str]] = []  # sec, display, cam_hint
+
+    for pat in _VIDEO_START_PATTERNS:
+        for m in pat.finditer(text):
+            h, mi, sec = m.group(1), m.group(2), m.group(3)
+            try:
+                total = int(h) * 3600 + int(mi) * 60 + float(sec)
+            except ValueError:
+                continue
+            display = format_seconds_as_clock(total)
+            cam_hint = ""
+            if "cam" in m.groupdict() and m.group("cam"):
+                cam_hint = m.group("cam").upper()
+            candidates.append((total, display, cam_hint))
+
+    if not candidates:
+        return None, None
+
+    if cam:
+        preferred = [c for c in candidates if c[2] == cam]
+        if preferred:
+            return preferred[0][0], preferred[0][1]
+    # 无匹配机位时取第一条通用/任意
+    return candidates[0][0], candidates[0][1]
+
+
+def segments_look_absolute(
+    segments: Sequence[Dict[str, Any]],
+    video_start_abs: Optional[float] = None,
+) -> bool:
+    """
+    判断 Excel Start/End 更像「一天内绝对时刻」还是「相对视频第 0 帧」。
+    当前咸阳表多为相对时间（0~约 900s）；若为绝对时刻则需减去 video_start_abs。
+    """
+    if not segments:
+        return False
+    starts = sorted(float(s["start"]) for s in segments)
+    med = starts[len(starts) // 2]
+    if med >= 3600.0:
+        return True
+    if video_start_abs is not None and med >= max(0.0, float(video_start_abs) - 120.0):
+        return True
+    return False
+
+
+def align_segments_to_video(
+    segments: Sequence[Dict[str, Any]],
+    video_start_abs: Optional[float] = None,
+) -> List[Dict[str, Any]]:
+    """
+    将标注段时间对齐到「视频时间轴」（t=0 为文件开头）。
+
+    - 相对时间：原样保留，标记 time_base=video_relative
+    - 绝对时刻：start/end -= video_start_abs，并保留 clock 字段
+    """
+    if not segments:
+        return []
+    abs_mode = segments_look_absolute(segments, video_start_abs)
+    if abs_mode and video_start_abs is None:
+        raise ValueError(
+            "标注时间像一天内绝对时刻，但缺少 video_start_abs（请在 position_maps 填首帧时间）"
+        )
+
+    out: List[Dict[str, Any]] = []
+    for s in segments:
+        ns = dict(s)
+        if abs_mode:
+            assert video_start_abs is not None
+            ns["start_clock"] = float(s["start"])
+            ns["end_clock"] = float(s["end"])
+            ns["start"] = max(0.0, float(s["start"]) - float(video_start_abs))
+            ns["end"] = max(ns["start"] + 1e-3, float(s["end"]) - float(video_start_abs))
+            ns["duration"] = float(ns["end"] - ns["start"])
+            ns["time_base"] = "video_relative_from_abs"
+        else:
+            ns["time_base"] = "video_relative"
+        if video_start_abs is not None:
+            ns["video_start_abs"] = float(video_start_abs)
+            ns["video_start_abs_str"] = format_seconds_as_clock(float(video_start_abs))
+        out.append(ns)
+    return out
+
+
+def normalize_xianyang_video_name(name: str) -> str:
+    """统一活动名/年级写法，便于 position_map 与磁盘文件名对齐。"""
+    s = Path(name).name
+    s = s.replace("小组讨论", "讨论").replace("小组汇报", "讨论")
+    s = s.replace("5年级", "五年级")
+    return s
+
+
 def sheet_id_for(grade: int, class_id: int, group: int) -> str:
     return f"{grade}-{class_id}-{group}"
 
@@ -334,10 +476,14 @@ def load_xianyang_segments(
     phase: str,
     speakers: Optional[Sequence[str]] = None,
     min_duration: float = 0.0,
+    video_start_abs: Optional[float] = None,
+    align_to_video: bool = True,
 ) -> List[Dict[str, Any]]:
     """
     从指定 sheet / 阶段加载说话段。
-    返回字段: start, end, speaker, duration, content, note, apt, reg, phase, sheet
+
+    返回字段含 start/end（视频时间轴秒）；align_to_video=True 时会按
+    video_start_abs 自动处理「相对时间」与「绝对时刻」两种标注。
     """
     if phase not in PHASES:
         raise ValueError(f"phase 必须是 {PHASES} 之一，收到: {phase}")
@@ -352,6 +498,8 @@ def load_xianyang_segments(
         if s["duration"] < min_duration:
             continue
         out.append(s)
+    if align_to_video:
+        out = align_segments_to_video(out, video_start_abs=video_start_abs)
     return out
 
 
@@ -473,6 +621,7 @@ def load_position_map_file(path: Path) -> Dict[str, Dict[str, Any]]:
         name = item.get("video_name")
         if name:
             out[str(name)] = item
+            out[normalize_xianyang_video_name(str(name))] = item
     return out
 
 
@@ -489,6 +638,16 @@ def left_to_right_to_ref_x(left_to_right: Sequence[str]) -> Dict[str, float]:
     }
 
 
+def _position_map_session_key(item: Dict[str, Any]) -> Optional[str]:
+    date = str(item.get("date") or "").strip()
+    sheet = str(item.get("sheet") or "").strip()
+    phase = str(item.get("phase") or "").strip()
+    cam = str(item.get("camera_tag") or "").strip().upper()
+    if not (date and sheet and phase and cam):
+        return None
+    return f"{date}|{sheet}|{phase}|{cam}"
+
+
 def resolve_video_position_map(
     video_name: str,
     map_paths: Sequence[Path],
@@ -496,24 +655,60 @@ def resolve_video_position_map(
     require_confirmed: bool = True,
 ) -> Optional[Dict[str, Any]]:
     """在若干 position_map JSON 中查找该视频的人工标注。"""
+    want_name = Path(video_name).name
+    want_norm = normalize_xianyang_video_name(want_name)
+    parsed = parse_xianyang_video_name(want_name)
+    want_key = None
+    if parsed:
+        want_key = f"{parsed['date']}|{parsed['sheet']}|{parsed['phase']}|{parsed['camera_tag']}"
+
     for path in map_paths:
         p = Path(path)
         if not p.exists():
             continue
-        by_name = load_position_map_file(p)
-        item = by_name.get(video_name)
-        if not item:
+        doc = json.loads(p.read_text(encoding="utf-8"))
+        item: Optional[Dict[str, Any]] = None
+        for cand in doc.get("videos") or []:
+            cname = str(cand.get("video_name") or "")
+            if cname == want_name or normalize_xianyang_video_name(cname) == want_norm:
+                item = cand
+                break
+            if want_key and _position_map_session_key(cand) == want_key:
+                item = cand
+                break
+        if item is None and parsed:
+            # 机位标签与 JSON 不一致时：同一 date/sheet/phase 唯一则仍可用
+            soft = [
+                c
+                for c in (doc.get("videos") or [])
+                if str(c.get("date") or "") == parsed["date"]
+                and str(c.get("sheet") or "") == parsed["sheet"]
+                and str(c.get("phase") or "") == parsed["phase"]
+            ]
+            if len(soft) == 1:
+                item = soft[0]
+        if item is None:
             continue
         if require_confirmed and not item.get("confirmed"):
             return None
         ltr = item.get("left_to_right") or []
         if not ltr:
             return None
+
+        v_abs = item.get("video_start_abs")
+        v_str = item.get("video_start_abs_str")
+        if v_abs is None:
+            v_abs, v_str = parse_video_start_abs_from_note(
+                item.get("annotation_note"),
+                camera_tag=str(item.get("camera_tag") or ""),
+            )
         return {
             "left_to_right": [str(s).upper() for s in ltr],
             "speaker_ref_x": left_to_right_to_ref_x(ltr),
             "confirmed": bool(item.get("confirmed")),
             "source": str(p),
+            "video_start_abs": None if v_abs is None else float(v_abs),
+            "video_start_abs_str": v_str,
             "raw": item,
         }
     return None

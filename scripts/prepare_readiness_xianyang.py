@@ -18,6 +18,7 @@ from __future__ import annotations
 import argparse
 import json
 import logging
+import os
 import sys
 from pathlib import Path
 from typing import Dict, List, Optional, Sequence, Tuple
@@ -75,6 +76,9 @@ def export_frame_features(
         frame_skip=frame_skip,
         speech_pose_frame_skip=max(2, frame_skip // 2),
         speech_pose_pad_sec=0.15,
+        face_backend=os.environ.get("CSD_FACE_BACKEND", "auto"),
+        yolov8_face_model=os.environ.get("YOLOV8_FACE_WEIGHTS", ""),
+        model_cache_dir=Path(os.environ.get("CSD_MODEL_CACHE", str(ROOT / "models"))),
     )
     tracker = FaceTracker(config)
     logger.info("人脸跟踪: %s", video)
@@ -366,16 +370,21 @@ def process_one(
         parsed["phase"],
         speakers=speakers,
         min_duration=0.4,
+        video_start_abs=None if pos is None else pos.get("video_start_abs"),
+        align_to_video=True,
     )
     # 只保留画面中出现的说话人段，避免把画外说话人对齐到错误人脸
     in_frame = set(left_to_right)
     segments = [s for s in segments if s["speaker"] in in_frame]
+    time_base = segments[0].get("time_base") if segments else None
     logger.info(
-        "处理 %s | sheet=%s phase=%s order=%s | 画内学生段=%d",
+        "处理 %s | sheet=%s phase=%s order=%s | video_start_abs=%s | time_base=%s | 画内学生段=%d",
         video.name,
         parsed["sheet"],
         parsed["phase"],
         left_to_right,
+        None if pos is None else pos.get("video_start_abs_str"),
+        time_base,
         len(segments),
     )
     (out_dir / "gt_segments.json").write_text(
@@ -388,6 +397,9 @@ def process_one(
                 **parsed,
                 "left_to_right": left_to_right,
                 "position_map_source": None if pos is None else pos.get("source"),
+                "video_start_abs": None if pos is None else pos.get("video_start_abs"),
+                "video_start_abs_str": None if pos is None else pos.get("video_start_abs_str"),
+                "time_base": time_base,
             },
             ensure_ascii=False,
             indent=2,

@@ -68,7 +68,18 @@ class HeadPoseAnalyzer:
         try:
             import mediapipe as mp
         except ImportError as e:
-            raise ImportError("请安装 mediapipe: pip install mediapipe") from e
+            raise ImportError("请安装 mediapipe: pip install 'mediapipe==0.10.14'") from e
+
+        # 新版 mediapipe（尤其部分 Linux/Py3.12 wheel）已移除 mp.solutions
+        if not hasattr(mp, "solutions"):
+            ver = getattr(mp, "__version__", "unknown")
+            raise ImportError(
+                f"当前 mediapipe=={ver} 没有 mp.solutions（Face Mesh 旧 API）。\n"
+                f"本项目需要经典 Face Mesh。请在实例执行:\n"
+                f"  pip uninstall -y mediapipe\n"
+                f"  pip install 'mediapipe==0.10.14'\n"
+                f"若仍失败，试: pip install 'mediapipe==0.10.13'"
+            )
 
         self._mp_face_mesh = mp.solutions.face_mesh
         self._face_mesh = self._mp_face_mesh.FaceMesh(
@@ -79,9 +90,10 @@ class HeadPoseAnalyzer:
             min_tracking_confidence=self.config.head_mesh_track_conf,
         )
         logger.info(
-            "HeadPose Face Mesh 已加载 (static_roi=%s, det_conf=%.2f)",
+            "HeadPose Face Mesh 已加载 (static_roi=%s, det_conf=%.2f, mediapipe=%s)",
             self.config.head_mesh_static_roi,
             self.config.head_mesh_det_conf,
+            getattr(mp, "__version__", "?"),
         )
 
     @staticmethod

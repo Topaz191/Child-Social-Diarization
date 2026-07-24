@@ -1,0 +1,155 @@
+{
+  "version": 1,
+  "date": "0706",
+  "class_id": 2,
+  "excel": "202507-xianyang-小学生转录标注.xlsx",
+  "how_to_fill": [
+    "每个视频画面稳定入镜 3 名本组学生（左/中/右）；远处其他组人脸会被尺寸过滤掉。",
+    "打开对应 mp4，从观众视角按从左到右填写 left_to_right，必须是 3 个：S1/S2/S3 的一个排列。",
+    "文件名里的 S2S3/S2S3 只表示录音/剪辑机位，不代表画面只有两人。",
+    "核对无误后把 confirmed 改为 true。",
+    "T（老师）一般不写进 left_to_right。"
+  ],
+  "position_labels": {
+    "3人": [
+      "左",
+      "中",
+      "右"
+    ]
+  },
+  "expected_in_frame": 3,
+  "videos": [
+    {
+      "video_name": "0706-后测-五年级2班-第1组-S2S3-讨论.mp4",
+      "rel_path": "0706\\class3\\0706-后测-五年级2班-第1组-S2S3-讨论.mp4",
+      "date": "0706",
+      "class_id": 2,
+      "grade": 5,
+      "group": 1,
+      "phase": "后测",
+      "test": "post",
+      "sheet": "5-2-1",
+      "camera_tag": "S2S3",
+      "activity": "讨论",
+      "roster": {
+        "S1": "尚芃安",
+        "S2": "安可心",
+        "S3": "谭博允"
+      },
+      "in_frame_expected": [
+        "S3",
+        "S2",
+        "S1"
+      ],
+      "annotation_note": "开始时间为10:10:27.9；录像背景可见其他小组，S1请假；S2和S3人声有底噪",
+      "left_to_right": [
+        "S3",
+        "S2",
+        "S1"
+      ],
+      "confirmed": true,
+      "notes": "",
+      "video_start_abs": 36627.9,
+      "video_start_abs_str": "10:10:27.9"
+    },
+    {
+      "video_name": "0706-后测-五年级2班-第2组-S2S3-讨论.mp4",
+      "rel_path": "0706\\class3\\0706-后测-五年级2班-第2组-S2S3-讨论.mp4",
+      "date": "0706",
+      "class_id": 2,
+      "grade": 5,
+      "group": 2,
+      "phase": "后测",
+      "test": "post",
+      "sheet": "5-2-2",
+      "camera_tag": "S2S3",
+      "activity": "讨论",
+      "roster": {
+        "S1": "索朗措姆",
+        "S2": "张隽壕",
+        "S3": "郝芷弘"
+      },
+      "in_frame_expected": [
+        "S3",
+        "S2",
+        "S1"
+      ],
+      "annotation_note": "开始时间为10:10:26；录像背景可见其他小组；S2发言少；S3发言较多，以与S1对话为主",
+      "left_to_right": [
+        "S3",
+        "S2",
+        "S1"
+      ],
+      "confirmed": true,
+      "notes": "",
+      "video_start_abs": 36626.0,
+      "video_start_abs_str": "10:10:26"
+    },
+    {
+      "video_name": "0706-后测-五年级2班-第3组-S2S3-讨论.mp4",
+      "rel_path": "0706\\class3\\0706-后测-五年级2班-第3组-S2S3-讨论.mp4",
+      "date": "0706",
+      "class_id": 2,
+      "grade": 5,
+      "group": 3,
+      "phase": "后测",
+      "test": "post",
+      "sheet": "5-2-3",
+      "camera_tag": "S2S3",
+      "activity": "讨论",
+      "roster": {
+        "S1": "罗赟源",
+        "S2": "贺琳舒",
+        "S3": "胡梓瑜"
+      },
+      "in_frame_expected": [
+        "S3",
+        "S2",
+        "S1"
+      ],
+      "annotation_note": "原始录像缺失",
+      "left_to_right": [
+        "S3",
+        "S2",
+        "S1"
+      ],
+      "confirmed": true,
+      "notes": "",
+      "video_start_abs": null,
+      "video_start_abs_str": null
+    },
+    {
+      "video_name": "0706-后测-五年级2班-第4组-S2S3-讨论.mp4",
+      "rel_path": "0706\\class3\\0706-后测-五年级2班-第4组-S2S3-讨论.mp4",
+      "date": "0706",
+      "class_id": 2,
+      "grade": 5,
+      "group": 4,
+      "phase": "后测",
+      "test": "post",
+      "sheet": "5-2-4",
+      "camera_tag": "S2S3",
+      "activity": "讨论",
+      "roster": {
+        "S1": "李嘉轶",
+        "S2": "牟淑瑶",
+        "S3": "张孜越"
+      },
+      "in_frame_expected": [
+        "S3",
+        "S2",
+        "S1"
+      ],
+      "annotation_note": "原始录像缺失",
+      "left_to_right": [
+        "S3",
+        "S2",
+        "S1"
+      ],
+      "confirmed": true,
+      "notes": "",
+      "video_start_abs": null,
+      "video_start_abs_str": null
+    }
+  ]
+}

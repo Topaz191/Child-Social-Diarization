@@ -1,0 +1,155 @@
+{
+  "version": 1,
+  "date": "0704",
+  "class_id": 3,
+  "excel": "202507-xianyang-小学生转录标注.xlsx",
+  "how_to_fill": [
+    "每个视频画面稳定入镜 3 名本组学生（左/中/右）；远处其他组人脸会被尺寸过滤掉。",
+    "打开对应 mp4，从观众视角按从左到右填写 left_to_right，必须是 3 个：S1/S2/S3 的一个排列。",
+    "文件名里的 S2S3/S2S3 只表示录音/剪辑机位，不代表画面只有两人。",
+    "核对无误后把 confirmed 改为 true。",
+    "T（老师）一般不写进 left_to_right。"
+  ],
+  "position_labels": {
+    "3人": [
+      "左",
+      "中",
+      "右"
+    ]
+  },
+  "expected_in_frame": 3,
+  "videos": [
+    {
+      "video_name": "0704-中测-五年级3班-第1组-S2S3-讨论.mp4",
+      "rel_path": "0704\\class3\\0704-中测-五年级3班-第1组-S2S3-讨论.mp4",
+      "date": "0704",
+      "class_id": 3,
+      "grade": 5,
+      "group": 1,
+      "phase": "中测",
+      "test": "mid",
+      "sheet": "5-3-1",
+      "camera_tag": "S2S3",
+      "activity": "讨论",
+      "roster": {
+        "S1": "董子瑜",
+        "S2": "肖奕辰",
+        "S3": "高博艺"
+      },
+      "in_frame_expected": [
+        "S3",
+        "S2",
+        "S1"
+      ],
+      "annotation_note": "开始时间为10:10:43.0；录像背景可见其他小组，视角偏斜导致人像小；S2发言较多，S3发言较多",
+      "left_to_right": [
+        "S3",
+        "S2",
+        "S1"
+      ],
+      "confirmed": true,
+      "notes": "",
+      "video_start_abs": 36643.0,
+      "video_start_abs_str": "10:10:43"
+    },
+    {
+      "video_name": "0704-中测-五年级3班-第2组-S2S3-讨论.mp4",
+      "rel_path": "0704\\class3\\0704-中测-五年级3班-第2组-S2S3-讨论.mp4",
+      "date": "0704",
+      "class_id": 3,
+      "grade": 5,
+      "group": 2,
+      "phase": "中测",
+      "test": "mid",
+      "sheet": "5-3-2",
+      "camera_tag": "S2S3",
+      "activity": "讨论",
+      "roster": {
+        "S1": "张轩睿",
+        "S2": "李萱如",
+        "S3": "孙仁泽"
+      },
+      "in_frame_expected": [
+        "S3",
+        "S2",
+        "S1"
+      ],
+      "annotation_note": "开始时间为10:10:42.2；录像背景可见其他小组；S2发言较多；S3发言较多，以与S2讨论为主",
+      "left_to_right": [
+        "S3",
+        "S2",
+        "S1"
+      ],
+      "confirmed": true,
+      "notes": "",
+      "video_start_abs": 36642.2,
+      "video_start_abs_str": "10:10:42.2"
+    },
+    {
+      "video_name": "0704-中测-五年级3班-第3组-S2S3-讨论.mp4",
+      "rel_path": "0704\\class3\\0704-中测-五年级3班-第3组-S2S3-讨论.mp4",
+      "date": "0704",
+      "class_id": 3,
+      "grade": 5,
+      "group": 3,
+      "phase": "中测",
+      "test": "mid",
+      "sheet": "5-3-3",
+      "camera_tag": "S2S3",
+      "activity": "讨论",
+      "roster": {
+        "S1": "刘柏祺",
+        "S2": "仝芸溪",
+        "S3": "孙令扬"
+      },
+      "in_frame_expected": [
+        "S3",
+        "S2",
+        "S1"
+      ],
+      "annotation_note": "开始时间为10:10:41.0；录像背景偶尔可见其他人员，视角偏斜导致侧脸较多；S2发言较多，以与S1对话为主；S3极少发言",
+      "left_to_right": [
+        "S3",
+        "S2",
+        "S1"
+      ],
+      "confirmed": true,
+      "notes": "",
+      "video_start_abs": 36641.0,
+      "video_start_abs_str": "10:10:41"
+    },
+    {
+      "video_name": "0704-中测-五年级3班-第4组-S2S3-讨论.mp4",
+      "rel_path": "0704\\class3\\0704-中测-五年级3班-第4组-S2S3-讨论.mp4",
+      "date": "0704",
+      "class_id": 3,
+      "grade": 5,
+      "group": 4,
+      "phase": "中测",
+      "test": "mid",
+      "sheet": "5-3-4",
+      "camera_tag": "S2S3",
+      "activity": "讨论",
+      "roster": {
+        "S1": "许马瑞恩",
+        "S2": "刘子熙",
+        "S3": "许丹青"
+      },
+      "in_frame_expected": [
+        "S3",
+        "S2",
+        "S1"
+      ],
+      "annotation_note": "开始时间为10:10:40；录像中S1桌面缺角；S2发言较少，以低头绘图为主；S3发言较多",
+      "left_to_right": [
+        "S3",
+        "S2",
+        "S1"
+      ],
+      "confirmed": true,
+      "notes": "",
+      "video_start_abs": 36640.0,
+      "video_start_abs_str": "10:10:40"
+    }
+  ]
+}

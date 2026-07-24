@@ -1,0 +1,155 @@
+{
+  "version": 1,
+  "date": "0706",
+  "class_id": 3,
+  "excel": "202507-xianyang-小学生转录标注.xlsx",
+  "how_to_fill": [
+    "每个视频画面稳定入镜 3 名本组学生（左/中/右）；远处其他组人脸会被尺寸过滤掉。",
+    "打开对应 mp4，从观众视角按从左到右填写 left_to_right，必须是 3 个：S1/S2/S3 的一个排列。",
+    "文件名里的 S2S3/S2S3 只表示录音/剪辑机位，不代表画面只有两人。",
+    "核对无误后把 confirmed 改为 true。",
+    "T（老师）一般不写进 left_to_right。"
+  ],
+  "position_labels": {
+    "3人": [
+      "左",
+      "中",
+      "右"
+    ]
+  },
+  "expected_in_frame": 3,
+  "videos": [
+    {
+      "video_name": "0706-后测-五年级3班-第1组-S2S3-讨论.mp4",
+      "rel_path": "0706\\class3\\0706-后测-五年级3班-第1组-S2S3-讨论.mp4",
+      "date": "0706",
+      "class_id": 3,
+      "grade": 5,
+      "group": 1,
+      "phase": "后测",
+      "test": "post",
+      "sheet": "5-3-1",
+      "camera_tag": "S2S3",
+      "activity": "讨论",
+      "roster": {
+        "S1": "董子瑜",
+        "S2": "肖奕辰",
+        "S3": "高博艺"
+      },
+      "in_frame_expected": [
+        "S3",
+        "S2",
+        "S1"
+      ],
+      "annotation_note": "开始时间为09:17:44.3 ；背景可见其他小组；S2S3人声清晰可辨",
+      "left_to_right": [
+        "S3",
+        "S2",
+        "S1"
+      ],
+      "confirmed": true,
+      "notes": "",
+      "video_start_abs": 33464.3,
+      "video_start_abs_str": "9:17:44.3"
+    },
+    {
+      "video_name": "0706-后测-五年级3班-第2组-S2S3-讨论.mp4",
+      "rel_path": "0706\\class3\\0706-后测-五年级3班-第2组-S2S3-讨论.mp4",
+      "date": "0706",
+      "class_id": 3,
+      "grade": 5,
+      "group": 2,
+      "phase": "后测",
+      "test": "post",
+      "sheet": "5-3-2",
+      "camera_tag": "S2S3",
+      "activity": "讨论",
+      "roster": {
+        "S1": "张轩睿",
+        "S2": "李萱如",
+        "S3": "孙仁泽"
+      },
+      "in_frame_expected": [
+        "S3",
+        "S2",
+        "S1"
+      ],
+      "annotation_note": "开始时间为9:17:42.9；背景可见其他小组；S2S3人声清晰可辨",
+      "left_to_right": [
+        "S3",
+        "S2",
+        "S1"
+      ],
+      "confirmed": true,
+      "notes": "",
+      "video_start_abs": 33462.9,
+      "video_start_abs_str": "9:17:42.9"
+    },
+    {
+      "video_name": "0706-后测-五年级3班-第3组-S2S3-讨论.mp4",
+      "rel_path": "0706\\class3\\0706-后测-五年级3班-第3组-S2S3-讨论.mp4",
+      "date": "0706",
+      "class_id": 3,
+      "grade": 5,
+      "group": 3,
+      "phase": "后测",
+      "test": "post",
+      "sheet": "5-3-3",
+      "camera_tag": "S2S3",
+      "activity": "讨论",
+      "roster": {
+        "S1": "刘柏祺",
+        "S2": "仝芸溪",
+        "S3": "孙令扬"
+      },
+      "in_frame_expected": [
+        "S3",
+        "S2",
+        "S1"
+      ],
+      "annotation_note": "开始时间为9:17:41；背景干净；S2S3人声清晰可辨",
+      "left_to_right": [
+        "S3",
+        "S2",
+        "S1"
+      ],
+      "confirmed": true,
+      "notes": "",
+      "video_start_abs": 33461.0,
+      "video_start_abs_str": "9:17:41"
+    },
+    {
+      "video_name": "0706-后测-五年级3班-第4组-S2S3-讨论.mp4",
+      "rel_path": "0706\\class3\\0706-后测-五年级3班-第4组-S2S3-讨论.mp4",
+      "date": "0706",
+      "class_id": 3,
+      "grade": 5,
+      "group": 4,
+      "phase": "后测",
+      "test": "post",
+      "sheet": "5-3-4",
+      "camera_tag": "S2S3",
+      "activity": "讨论",
+      "roster": {
+        "S1": "许马瑞恩",
+        "S2": "刘子熙",
+        "S3": "许丹青"
+      },
+      "in_frame_expected": [
+        "S3",
+        "S2",
+        "S1"
+      ],
+      "annotation_note": "开始时间为09:17:43；背景干净；S1缺勤，S2人声极小，S3人声清晰可辨",
+      "left_to_right": [
+        "S3",
+        "S2",
+        "S1"
+      ],
+      "confirmed": true,
+      "notes": "",
+      "video_start_abs": 33463.0,
+      "video_start_abs_str": "9:17:43"
+    }
+  ]
+}

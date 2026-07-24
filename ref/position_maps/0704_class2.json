@@ -1,12 +1,13 @@
 {
   "version": 1,
-  "date": "0701",
+  "date": "0704",
   "class_id": 2,
   "excel": "202507-xianyang-小学生转录标注.xlsx",
   "how_to_fill": [
     "每个视频画面稳定入镜 3 名本组学生（左/中/右）；远处其他组人脸会被尺寸过滤掉。",
     "打开对应 mp4，从观众视角按从左到右填写 left_to_right，必须是 3 个：S1/S2/S3 的一个排列。",
     "文件名里的 S1S2/S2S3 只表示录音/剪辑机位，不代表画面只有两人。",
+    "模板默认按 Excel 各组生成；video_name 为占位猜测，若与真实文件名不一致请改正。",
     "核对无误后把 confirmed 改为 true。",
     "T（老师）一般不写进 left_to_right。"
   ],
@@ -20,9 +21,9 @@
   "expected_in_frame": 3,
   "videos": [
     {
-      "video_name": "0701-前测-五年级2班-第1组-S2S3-讨论.mp4",
-      "rel_path": "0701\\class2\\0701-前测-五年级2班-第1组-S2S3-讨论.mp4",
-      "date": "0701",
+      "video_name": "0704-前测-五年级2班-第1组-S2S3-讨论.mp4",
+      "rel_path": "0704\\class2\\0704-前测-五年级2班-第1组-S2S3-讨论.mp4",
+      "date": "0704",
       "class_id": 2,
       "grade": 5,
       "group": 1,
@@ -49,9 +50,9 @@
       "video_start_abs_str": "9:25:02.4"
     },
     {
-      "video_name": "0701-前测-五年级2班-第2组-S1S2-讨论.mp4",
-      "rel_path": "0701\\class2\\0701-前测-五年级2班-第2组-S1S2-讨论.mp4",
-      "date": "0701",
+      "video_name": "0704-前测-五年级2班-第2组-S1S2-讨论.mp4",
+      "rel_path": "0704\\class2\\0704-前测-五年级2班-第2组-S1S2-讨论.mp4",
+      "date": "0704",
       "class_id": 2,
       "grade": 5,
       "group": 2,
@@ -82,26 +83,26 @@
       "video_start_abs_str": "9:25:00.9"
     },
     {
-      "video_name": "0701-前测-五年级2班-第3组-S1S2-讨论-1.mp4",
-      "rel_path": "0701\\class2\\0701-前测-五年级2班-第3组-S1S2-讨论-1.mp4",
-      "date": "0701",
+      "video_name": "0704-前测-五年级2班-第3组-S2S3-讨论.mp4",
+      "rel_path": "0704\\class2\\0704-前测-五年级2班-第3组-S2S3-讨论.mp4",
+      "date": "0704",
       "class_id": 2,
       "grade": 5,
       "group": 3,
       "phase": "前测",
       "test": "pre",
       "sheet": "5-2-3",
-      "camera_tag": "S1S2",
-      "activity": "讨论-1",
+      "camera_tag": "S2S3",
+      "activity": "讨论",
       "roster": {
         "S1": "罗赟源",
         "S2": "贺琳舒",
         "S3": "胡梓瑜"
       },
       "in_frame_expected": [
-        "S1",
+        "S3",
         "S2",
-        "S3"
+        "S1"
       ],
       "annotation_note": "0701-2班-第3组-S1由华为平板录制，因软件闪退未保存录像；视频为S2S3视角时间，没有时间戳水印，只有相对时间；S1被水杯遮挡，视线极有可能有大的缺失",
       "left_to_right": [
@@ -115,9 +116,9 @@
       "video_start_abs_str": null
     },
     {
-      "video_name": "0701-前测-五年级2班-第4组-S2S3-讨论.mp4",
-      "rel_path": "0701\\class2\\0701-前测-五年级2班-第4组-S2S3-讨论.mp4",
-      "date": "0701",
+      "video_name": "0704-前测-五年级2班-第4组-S2S3-讨论.mp4",
+      "rel_path": "0704\\class2\\0704-前测-五年级2班-第4组-S2S3-讨论.mp4",
+      "date": "0704",
       "class_id": 2,
       "grade": 5,
       "group": 4,
@@ -137,7 +138,6 @@
         "S3"
       ],
       "annotation_note": "综合S1和S2S3视角剪辑后的小组讨论视频转录，S1视角的首帧时间为9:24:57.4，S2S3视角视频的首帧时间为9:24:58.3。两视频时间在秒上已对齐，在毫秒上有区别但忽略。当前转录以S2S3视角为准。另外，s2s3视角中因为s2水杯太大有点遮挡s2，s1视角中因为s2低头写字，会遮挡s1",
-      "fill_hint": "请填画面 左/中/右 对应谁。预填占位 S1,S2,S3，请按实际座位改成正确排列。",
       "left_to_right": [
         "S3",
         "S2",

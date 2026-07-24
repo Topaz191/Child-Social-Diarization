@@ -79,7 +79,14 @@ class PositionSpeakerMapper:
     def __init__(self, config: ASDConfig):
         self.config = config
         self.lip_analyzer = LipMotionAnalyzer(config)
-        self.speaker_extractor = SpeakerEmbeddingExtractor(config)
+        self._speaker_extractor: Optional[SpeakerEmbeddingExtractor] = None
+
+    @property
+    def speaker_extractor(self) -> SpeakerEmbeddingExtractor:
+        """懒加载：仅声纹映射路径才需要，纯视觉槽位聚类不触发。"""
+        if self._speaker_extractor is None:
+            self._speaker_extractor = SpeakerEmbeddingExtractor(self.config)
+        return self._speaker_extractor
 
     @staticmethod
     def extract_position_slots(

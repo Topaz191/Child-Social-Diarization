@@ -1,12 +1,13 @@
 {
   "version": 1,
   "date": "0701",
-  "class_id": 1,
+  "class_id": 3,
   "excel": "202507-xianyang-小学生转录标注.xlsx",
   "how_to_fill": [
     "每个视频画面稳定入镜 3 名本组学生（左/中/右）；远处其他组人脸会被尺寸过滤掉。",
     "打开对应 mp4，从观众视角按从左到右填写 left_to_right，必须是 3 个：S1/S2/S3 的一个排列。",
     "文件名里的 S1S2/S2S3 只表示录音/剪辑机位，不代表画面只有两人。",
+    "模板默认按 Excel 各组生成；video_name 为占位猜测，若与真实文件名不一致请改正。",
     "核对无误后把 confirmed 改为 true。",
     "T（老师）一般不写进 left_to_right。"
   ],
@@ -20,28 +21,28 @@
   "expected_in_frame": 3,
   "videos": [
     {
-      "video_name": "0701-前测-五年级1班-第1组-S2S3-讨论.mp4",
-      "rel_path": "0701\\class1\\0701-前测-五年级1班-第1组-S2S3-讨论.mp4",
+      "video_name": "0701-前测-五年级3班-第1组-S2S3-讨论.mp4",
+      "rel_path": "0701\\class3\\0701-前测-五年级3班-第1组-S2S3-讨论.mp4",
       "date": "0701",
-      "class_id": 1,
+      "class_id": 3,
       "grade": 5,
       "group": 1,
       "phase": "前测",
       "test": "pre",
-      "sheet": "5-1-1",
+      "sheet": "5-3-1",
       "camera_tag": "S2S3",
       "activity": "讨论",
       "roster": {
-        "S1": "雷竣森",
-        "S2": "黄康靖瑶",
-        "S3": "陆苏昊"
+        "S1": "董子瑜",
+        "S2": "肖奕辰",
+        "S3": "高博艺"
       },
       "in_frame_expected": [
         "S1",
         "S2",
         "S3"
       ],
-      "annotation_note": "综合S1和S2S3视角剪辑后的讨论视频转录，初始时间为8:33:39.0，两视频已完全对齐，没有缺帧",
+      "annotation_note": "S1视角无声，只根据SS3视角转录,开始时间10:24:33.6",
       "left_to_right": [
         "S3",
         "S2",
@@ -49,32 +50,32 @@
       ],
       "confirmed": true,
       "notes": "",
-      "video_start_abs": 30819.0,
-      "video_start_abs_str": "8:33:39"
+      "video_start_abs": 37473.6,
+      "video_start_abs_str": "10:24:33.6"
     },
     {
-      "video_name": "0701-前测-五年级1班-第2组-S1S2-讨论.mp4",
-      "rel_path": "0701\\class1\\0701-前测-五年级1班-第2组-S1S2-讨论.mp4",
+      "video_name": "0701-前测-五年级3班-第2组-S1S2-讨论.mp4",
+      "rel_path": "0701\\class3\\0701-前测-五年级3班-第2组-S1S2-讨论.mp4",
       "date": "0701",
-      "class_id": 1,
+      "class_id": 3,
       "grade": 5,
       "group": 2,
       "phase": "前测",
       "test": "pre",
-      "sheet": "5-1-2",
+      "sheet": "5-3-2",
       "camera_tag": "S1S2",
       "activity": "讨论",
       "roster": {
-        "S1": "焦柯睿",
-        "S2": "雷俨路",
-        "S3": "王若麟"
+        "S1": "张轩睿",
+        "S2": "李萱如",
+        "S3": "孙仁泽"
       },
       "in_frame_expected": [
         "S1",
         "S2",
         "S3"
       ],
-      "annotation_note": "指的是监控死角；使用S1S2视角转录，S3视角缺失时间戳",
+      "annotation_note": "S3的声音串在第三组S1视角了，视频开始的北京时间为10：24：33.2  这个组的整体感受是各说各的，共同讨论的不多，最终S3carry全组",
       "left_to_right": [
         "S3",
         "S2",
@@ -82,32 +83,32 @@
       ],
       "confirmed": true,
       "notes": "",
-      "video_start_abs": null,
-      "video_start_abs_str": null
+      "video_start_abs": 37473.2,
+      "video_start_abs_str": "10:24:33.2"
     },
     {
-      "video_name": "0701-前测-五年级1班-第3组-S1S2-讨论.mp4",
-      "rel_path": "0701\\class1\\0701-前测-五年级1班-第3组-S1S2-讨论.mp4",
+      "video_name": "0701-前测-五年级3班-第3组-S2S3-讨论.mp4",
+      "rel_path": "0701\\class3\\0701-前测-五年级3班-第3组-S2S3-讨论.mp4",
       "date": "0701",
-      "class_id": 1,
+      "class_id": 3,
       "grade": 5,
       "group": 3,
       "phase": "前测",
       "test": "pre",
-      "sheet": "5-1-3",
-      "camera_tag": "S1S2",
+      "sheet": "5-3-3",
+      "camera_tag": "S2S3",
       "activity": "讨论",
       "roster": {
-        "S1": "杨浩鑫",
-        "S2": "田杜屿",
-        "S3": "丁载德"
+        "S1": "刘柏祺",
+        "S2": "仝芸溪",
+        "S3": "孙令扬"
       },
       "in_frame_expected": [
         "S1",
         "S2",
         "S3"
       ],
-      "annotation_note": "S1S2视角时间，没有时间戳",
+      "annotation_note": "这个视频没有时间水印。整体讨论也很差，S3不认真，主要是S2S1在讨论，且与S3的冲突比较大。S1声音没录上，是在第二组S2S3视角中",
       "left_to_right": [
         "S3",
         "S2",
@@ -119,28 +120,28 @@
       "video_start_abs_str": null
     },
     {
-      "video_name": "0701-前测-五年级1班-第4组-S2S3-讨论.mp4",
-      "rel_path": "0701\\class1\\0701-前测-五年级1班-第4组-S2S3-讨论.mp4",
+      "video_name": "0701-前测-五年级3班-第4组-S2S3-讨论.mp4",
+      "rel_path": "0701\\class3\\0701-前测-五年级3班-第4组-S2S3-讨论.mp4",
       "date": "0701",
-      "class_id": 1,
+      "class_id": 3,
       "grade": 5,
       "group": 4,
       "phase": "前测",
       "test": "pre",
-      "sheet": "5-1-4",
+      "sheet": "5-3-4",
       "camera_tag": "S2S3",
       "activity": "讨论",
       "roster": {
-        "S1": "李耘啸",
-        "S2": "吴沫萱",
-        "S3": "杨宗坷"
+        "S1": "许马瑞恩",
+        "S2": "刘子熙",
+        "S3": "许丹青"
       },
       "in_frame_expected": [
         "S1",
         "S2",
         "S3"
       ],
-      "annotation_note": "S2S3视角，S1基本都在自言自语，第一帧绝对时间：8:33:38.6",
+      "annotation_note": "S2S3视角，起始时间10:24:33.5  第四组S1的声音在第二组S2S3视角那里",
       "left_to_right": [
         "S3",
         "S2",
@@ -148,8 +149,8 @@
       ],
       "confirmed": true,
       "notes": "",
-      "video_start_abs": 30818.6,
-      "video_start_abs_str": "8:33:38.6"
+      "video_start_abs": 37473.5,
+      "video_start_abs_str": "10:24:33.5"
     }
   ]
 }
