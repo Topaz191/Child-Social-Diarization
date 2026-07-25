@@ -18,6 +18,7 @@ def validate(path: Path) -> int:
     videos = doc.get("videos") or []
     errors = 0
     confirmed = 0
+    missing_start = 0
     for i, v in enumerate(videos):
         name = v.get("video_name", f"#{i}")
         ltr = v.get("left_to_right")
@@ -45,7 +46,12 @@ def validate(path: Path) -> int:
             print(f"[OK]  {name}: {' → '.join(got)}")
         else:
             print(f"[TODO] {name}: {' → '.join(got)}  (confirmed=false)")
-    print(f"\n合计 {len(videos)} 个视频，已确认 {confirmed}，错误 {errors}")
+        if v.get("video_start_abs") is None:
+            print(f"[SKIP-TRAIN] {name}: 无 video_start_abs，默认不参与训练")
+            missing_start += 1
+    print(
+        f"\n合计 {len(videos)} 个视频，已确认 {confirmed}，无首帧时间 {missing_start}，错误 {errors}"
+    )
     return 1 if errors else 0
 
 

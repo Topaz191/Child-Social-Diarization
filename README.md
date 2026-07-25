@@ -52,7 +52,10 @@ Child-Social-Diarization/
 │   ├── index_xianyang_dataset.py       # 视频 ↔ Excel 自动对应
 │   ├── prepare_readiness_xianyang.py   # 抽帧特征 + 切正负样本
 │   ├── train_readiness_lstm.py         # 训练 readiness LSTM
-│   └── run_cluster_pipeline.sh         # 一键流水线
+│   ├── prepare_lip_amp_xianyang.py     # 偏正脸说话段 → 嘴动幅度样本
+│   ├── train_lip_amp.py                # 训练嘴动幅度标定器
+│   ├── run_cluster_pipeline.sh         # readiness 一键流水线
+│   └── run_lip_amp_pipeline.sh         # 嘴动幅度一键流水线
 ├── ref/
 │   ├── 202507-xianyang-小学生转录标注.xlsx
 │   ├── position_maps/                  # 画面左中右 ↔ S1/S2/S3
@@ -98,6 +101,30 @@ python scripts/prepare_readiness_xianyang.py --from-manifest output/xianyang/man
 python scripts/train_readiness_lstm.py --data-dir output/readiness_xianyang/merged_all --epochs 40 --hidden 64
 ```
 
+## 儿童嘴动幅度标定（lip-amp）
+
+用「转录说话段 + 偏正脸」弱监督，学习儿童 MAR 活跃度尺度（替换 `visual_conf` 里硬编码 `0.015`）。
+
+```bash
+# 一键（可加 --limit 2 试跑；已有 readiness 特征时可加 --skip-extract）
+bash scripts/run_lip_amp_pipeline.sh
+
+# 或分步
+python scripts/index_xianyang_dataset.py
+python scripts/prepare_lip_amp_xianyang.py \
+  --from-manifest output/xianyang/manifest.json \
+  --require-position-map \
+  --reuse-readiness-root output/readiness_xianyang \
+  --skip-existing
+python scripts/train_lip_amp.py --data-dir output/lip_amp_xianyang/merged_all
+```
+
+产物：
+
+- `output/lip_amp_xianyang/merged_all/lip_amp_model.pt`
+- `output/lip_amp_xianyang/merged_all/lip_amp_scale.json`（`activity_scale` ≈ 正样本活跃度 p75）
+- `VisualConfidenceEstimator` 会自动加载上述文件（若存在）
+
 ## 产物位置
 
 - 索引：`output/xianyang/manifest.json`
@@ -105,8 +132,9 @@ python scripts/train_readiness_lstm.py --data-dir output/readiness_xianyang/merg
 - 合并训练数据：`output/readiness_xianyang/merged_all/readiness_samples.npz`
 - 模型：`output/readiness_xianyang/merged_all/readiness_model.pt`
 - 报告：`output/readiness_xianyang/merged_all/train_report.json`
+- 嘴动幅度：`output/lip_amp_xianyang/merged_all/`
 
 ## 与本地完整工程的关系
 
-- 本仓库只服务 **SpeakAhead / readiness LSTM** 规模化训练。
+- 本仓库服务 **SpeakAhead / readiness** 与 **儿童嘴动幅度标定** 规模化训练。
 - 动态可信度融合 / SituationRouter 集成仍在本地完整工程；模型训好后拷回集成。

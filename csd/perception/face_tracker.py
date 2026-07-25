@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import logging
 from dataclasses import dataclass, field
+from pathlib import Path
 from typing import Dict, List, Optional, Tuple
 
 import cv2
@@ -450,7 +451,16 @@ class FaceTracker:
         """处理整个视频，返回 frame_idx -> 活跃轨迹列表。"""
         cap = cv2.VideoCapture(video_path)
         if not cap.isOpened():
-            raise FileNotFoundError(f"无法打开视频: {video_path}")
+            p = Path(video_path)
+            hint = ""
+            if p.is_file():
+                hint = (
+                    f"（文件存在 size={p.stat().st_size}；常见原因：上传不完整/损坏，"
+                    f"ffmpeg 报 moov atom not found 时请重新上传）"
+                )
+            elif not p.exists():
+                hint = "（路径不存在）"
+            raise FileNotFoundError(f"无法打开视频: {video_path}{hint}")
 
         self.fps = cap.get(cv2.CAP_PROP_FPS) or 25.0
         w = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))

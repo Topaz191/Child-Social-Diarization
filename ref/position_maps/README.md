@@ -15,7 +15,7 @@
 
 1. `left_to_right`：必须 3 个，例如 `["S2", "S1", "S3"]`（左→中→右）
 2. `confirmed`：核对无误后改为 `true`
-3. `video_start_abs` / `video_start_abs_str`：视频第 0 帧的绝对时刻（从 `annotation_note` 自动抽取；无时间戳则为 `null`）。Excel 里 Start/End 若是相对视频时间则直接用；若是一天内绝对时刻，脚本会减去该字段对齐到视频时间轴。
+3. `video_start_abs` / `video_start_abs_str`：视频第 0 帧的绝对时刻（从 `annotation_note` 自动抽取）。**若为 `null`，默认视为无效，不参与 readiness 训练。** Excel 的 Start/End 若是相对视频时间则直接用；若是一天内绝对时刻，脚本会减去该字段对齐到视频时间轴。
 
 ## 生成 / 校验
 

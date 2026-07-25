@@ -342,6 +342,7 @@ def process_one(
     student_only: bool,
     position_map_paths: Optional[Sequence[Path]] = None,
     require_position_map: bool = False,
+    require_video_start_abs: bool = True,
 ) -> Optional[Path]:
     parsed = parse_xianyang_video_name(video.name)
     if parsed is None:
@@ -354,6 +355,16 @@ def process_one(
     if require_position_map and pos is None:
         logger.error("缺少已确认的位置标注，跳过: %s", video.name)
         return None
+
+    video_start_abs = None if pos is None else pos.get("video_start_abs")
+    video_start_abs_str = None if pos is None else pos.get("video_start_abs_str")
+    if require_video_start_abs and video_start_abs is None:
+        logger.error(
+            "缺少 video_start_abs（首帧绝对时间），视为无效不参与训练，跳过: %s",
+            video.name,
+        )
+        return None
+
     left_to_right = pos["left_to_right"] if pos else ["S1", "S2", "S3"]
     if pos:
         logger.info("使用人工位置标注: %s", left_to_right)
@@ -370,7 +381,7 @@ def process_one(
         parsed["phase"],
         speakers=speakers,
         min_duration=0.4,
-        video_start_abs=None if pos is None else pos.get("video_start_abs"),
+        video_start_abs=video_start_abs,
         align_to_video=True,
     )
     # 只保留画面中出现的说话人段，避免把画外说话人对齐到错误人脸
@@ -383,7 +394,7 @@ def process_one(
         parsed["sheet"],
         parsed["phase"],
         left_to_right,
-        None if pos is None else pos.get("video_start_abs_str"),
+        video_start_abs_str,
         time_base,
         len(segments),
     )
@@ -397,8 +408,8 @@ def process_one(
                 **parsed,
                 "left_to_right": left_to_right,
                 "position_map_source": None if pos is None else pos.get("source"),
-                "video_start_abs": None if pos is None else pos.get("video_start_abs"),
-                "video_start_abs_str": None if pos is None else pos.get("video_start_abs_str"),
+                "video_start_abs": video_start_abs,
+                "video_start_abs_str": video_start_abs_str,
                 "time_base": time_base,
             },
             ensure_ascii=False,
@@ -505,6 +516,11 @@ def parse_args() -> argparse.Namespace:
         action="store_true",
         help="没有 confirmed 位置标注则跳过该视频",
     )
+    p.add_argument(
+        "--allow-missing-video-start",
+        action="store_true",
+        help="允许缺少 video_start_abs 的场次（默认：无首帧时间则跳过，不参与训练）",
+    )
     return p.parse_args()
 
 
@@ -533,30 +549,67 @@ def main() -> None:
         raise SystemExit("没有待处理视频。请先放入 video/xianyang/{date}/classN/ 并检查命名。")
 
     done_dirs: List[Path] = []
+    require_video_start_abs = not args.allow_missing_video_start
     for video in videos:
         parsed = parse_xianyang_video_name(video.name)
         if parsed is None:
             logger.warning("跳过无法解析: %s", video)
             continue
         out_dir = args.out_root / f"{parsed['date']}_{parsed['sheet']}_{parsed['test']}_{parsed['camera_tag']}"
+        pos = None
+        if position_maps:
+            pos = resolve_video_position_map(video.name, position_maps, require_confirmed=True)
+        map_start = None if pos is None else pos.get("video_start_abs")
+
         if args.skip_existing and (out_dir / "readiness_samples.npz").exists():
-            logger.info("已存在，跳过: %s", out_dir.name)
-            done_dirs.append(out_dir)
+            meta_path = out_dir / "session_meta.json"
+            meta_start = None
+            if meta_path.exists():
+                meta = json.loads(meta_path.read_text(encoding="utf-8"))
+                meta_start = meta.get("video_start_abs")
+            effective_start = meta_start if meta_start is not None else map_start
+            if require_video_start_abs and effective_start is None:
+                logger.error(
+                    "已有样本且无 video_start_abs（position_map/session_meta），不并入训练: %s",
+                    out_dir.name,
+                )
+                continue
+            if require_video_start_abs and meta_start is None and map_start is not None:
+                # 旧产物缺字段，但标注里已有首帧时间 → 强制重抽，保证对齐一致
+                logger.warning(
+                    "已有样本缺 video_start_abs，但 position_map 有首帧时间，强制重跑: %s",
+                    out_dir.name,
+                )
+            else:
+                logger.info("已存在，跳过: %s", out_dir.name)
+                done_dirs.append(out_dir)
+                continue
+
+        if require_video_start_abs and map_start is None and not (
+            args.skip_existing and (out_dir / "readiness_samples.npz").exists()
+        ):
+            # process_one 内也会检查；这里提前打日志更清晰
+            pass
+
+        try:
+            result = process_one(
+                video=video,
+                excel=args.excel,
+                out_root=args.out_root,
+                frame_skip=args.frame_skip,
+                window_sec=args.window_sec,
+                seq_len=args.seq_len,
+                neg_margin=args.neg_margin,
+                seed=args.seed,
+                skip_extract=args.skip_extract,
+                student_only=student_only,
+                position_map_paths=position_maps,
+                require_position_map=args.require_position_map,
+                require_video_start_abs=require_video_start_abs,
+            )
+        except Exception as exc:
+            logger.exception("处理失败，跳过继续: %s | %s", video.name, exc)
             continue
-        result = process_one(
-            video=video,
-            excel=args.excel,
-            out_root=args.out_root,
-            frame_skip=args.frame_skip,
-            window_sec=args.window_sec,
-            seq_len=args.seq_len,
-            neg_margin=args.neg_margin,
-            seed=args.seed,
-            skip_extract=args.skip_extract,
-            student_only=student_only,
-            position_map_paths=position_maps,
-            require_position_map=args.require_position_map,
-        )
         if result is not None:
             done_dirs.append(out_dir)
 
@@ -564,9 +617,11 @@ def main() -> None:
     if done_dirs:
         try:
             merge_npzs(done_dirs, merge_out)
-            logger.info("合并训练集: %s", merge_out)
+            logger.info("合并训练集: %s (%d 场)", merge_out, len(done_dirs))
         except RuntimeError as exc:
             logger.warning("%s", exc)
+    else:
+        logger.warning("没有可用场次可合并（检查 video_start_abs / 视频是否损坏）")
 
 
 if __name__ == "__main__":

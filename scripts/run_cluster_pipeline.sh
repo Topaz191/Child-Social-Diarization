@@ -9,6 +9,7 @@ python scripts/index_xianyang_dataset.py
 echo "[2/4] 抽特征 + 切样本（可加 --limit 2 试跑）"
 python scripts/prepare_readiness_xianyang.py \
   --from-manifest output/xianyang/manifest.json \
+  --require-position-map \
   --skip-existing \
   "$@"
 
