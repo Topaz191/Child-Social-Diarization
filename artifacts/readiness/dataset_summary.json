@@ -1,0 +1,31 @@
+{
+  "n_samples": 820,
+  "n_pos": 410,
+  "n_neg": 410,
+  "X_shape": [
+    820,
+    16,
+    18
+  ],
+  "feature_cols": [
+    "yaw",
+    "pitch",
+    "roll",
+    "mouth_opening",
+    "visibility",
+    "side_face_weight",
+    "d_yaw",
+    "d_pitch",
+    "d_roll",
+    "d_mouth",
+    "mouth_mean_short",
+    "mouth_std_short",
+    "mouth_max_short",
+    "mouth_trend",
+    "others_mouth_mean",
+    "others_mouth_max",
+    "mouth_rel",
+    "others_still"
+  ],
+  "npz": "output/readiness_xianyang/merged_all/readiness_samples.npz"
+}

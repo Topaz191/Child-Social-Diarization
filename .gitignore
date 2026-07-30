@@ -6,6 +6,12 @@ output/**
 !output/.gitkeep
 !video/xianyang/.gitkeep
 
+# 允许提交精简训练产物（模型 + 报告，体积小）
+!artifacts/
+!artifacts/**/*.pt
+!artifacts/**/*.json
+!artifacts/**/*.md
+
 __pycache__/
 **/__pycache__/
 *.py[cod]
@@ -17,6 +23,8 @@ venv/
 *.onnx
 *.engine
 *.npz
+# 覆盖：artifacts 下的小模型仍可提交
+!artifacts/**/*.pt
 .DS_Store
 Thumbs.db
 logs/

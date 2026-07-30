@@ -4,7 +4,11 @@
 
 面向 GPU 租赁平台 / 超算的精简工程：从课堂视频抽取头部/嘴部时序特征，训练轻量 LSTM，预测「即将开口」概率（SpeakAhead）。属于 Child Social Diarization（CSD）中的视觉准备度子模块。
 
-视频与 `output/` 不进 Git；在算力平台侧单独下载/挂载数据。
+**同门快速入口（思路 + 结果 + 代码地图）：**  
+→ [`docs/SpeakAhead发言准备度.md`](docs/SpeakAhead发言准备度.md)  
+→ 训练好的权重与报告：[`artifacts/readiness/`](artifacts/readiness/)
+
+视频与完整 `output/` 不进 Git；在算力平台侧单独下载/挂载数据。小体积产物（`artifacts/`）已提交便于传阅。
 
 ## 推荐工作流（本机改代码 → GitHub → GPU 平台跑）
 

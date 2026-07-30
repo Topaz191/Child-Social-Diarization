@@ -1,0 +1,132 @@
+{
+  "n_samples": 820,
+  "n_train": 656,
+  "n_val": 164,
+  "all_metrics": {
+    "accuracy": 0.9536585365853658,
+    "auc": 0.9827602617489589,
+    "pos_mean": 0.9450817704200745,
+    "neg_mean": 0.0847504660487175
+  },
+  "lift": {
+    "lift_rate": NaN,
+    "n_checked": 0
+  },
+  "best_val_auc": 0.9072916666666667,
+  "pass_lift_60": false,
+  "pass_auc_above_chance": true,
+  "model_path": "output/readiness_xianyang/merged_all/readiness_model.pt",
+  "history_tail": [
+    {
+      "epoch": 36,
+      "loss": 0.07047577490802945,
+      "train": {
+        "accuracy": 0.9786585365853658,
+        "auc": 0.9985313255251905,
+        "pos_mean": 0.9561054110527039,
+        "neg_mean": 0.036683667451143265
+      },
+      "val": {
+        "accuracy": 0.823170731707317,
+        "auc": 0.9028273809523809,
+        "pos_mean": 0.7703146934509277,
+        "neg_mean": 0.1289556324481964
+      }
+    },
+    {
+      "epoch": 37,
+      "loss": 0.06909399837391769,
+      "train": {
+        "accuracy": 0.9695121951219512,
+        "auc": 0.9988752556237219,
+        "pos_mean": 0.9796736240386963,
+        "neg_mean": 0.08015938848257065
+      },
+      "val": {
+        "accuracy": 0.8353658536585366,
+        "auc": 0.9030505952380953,
+        "pos_mean": 0.8217254877090454,
+        "neg_mean": 0.18801343441009521
+      }
+    },
+    {
+      "epoch": 38,
+      "loss": 0.06469728933965288,
+      "train": {
+        "accuracy": 0.9771341463414634,
+        "auc": 0.9989496188882692,
+        "pos_mean": 0.9773776531219482,
+        "neg_mean": 0.06424108892679214
+      },
+      "val": {
+        "accuracy": 0.8597560975609756,
+        "auc": 0.9072916666666667,
+        "pos_mean": 0.8197425007820129,
+        "neg_mean": 0.1693517118692398
+      }
+    },
+    {
+      "epoch": 39,
+      "loss": 0.0587115801115543,
+      "train": {
+        "accuracy": 0.9801829268292683,
+        "auc": 0.9983825989960959,
+        "pos_mean": 0.9652048349380493,
+        "neg_mean": 0.03670893982052803
+      },
+      "val": {
+        "accuracy": 0.823170731707317,
+        "auc": 0.9022321428571428,
+        "pos_mean": 0.771684467792511,
+        "neg_mean": 0.12571530044078827
+      }
+    },
+    {
+      "epoch": 40,
+      "loss": 0.052704709590548966,
+      "train": {
+        "accuracy": 0.9588414634146342,
+        "auc": 0.9984104852203012,
+        "pos_mean": 0.9865666627883911,
+        "neg_mean": 0.08090172708034515
+      },
+      "val": {
+        "accuracy": 0.8292682926829268,
+        "auc": 0.9030505952380953,
+        "pos_mean": 0.8399118781089783,
+        "neg_mean": 0.20360350608825684
+      }
+    }
+  ],
+  "dataset_summary": {
+    "n_samples": 820,
+    "n_pos": 410,
+    "n_neg": 410,
+    "X_shape": [
+      820,
+      16,
+      18
+    ],
+    "feature_cols": [
+      "yaw",
+      "pitch",
+      "roll",
+      "mouth_opening",
+      "visibility",
+      "side_face_weight",
+      "d_yaw",
+      "d_pitch",
+      "d_roll",
+      "d_mouth",
+      "mouth_mean_short",
+      "mouth_std_short",
+      "mouth_max_short",
+      "mouth_trend",
+      "others_mouth_mean",
+      "others_mouth_max",
+      "mouth_rel",
+      "others_still"
+    ],
+    "npz": "output/readiness_xianyang/merged_all/readiness_samples.npz"
+  }
+}
