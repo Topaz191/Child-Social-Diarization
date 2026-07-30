@@ -39,8 +39,13 @@ from csd.data.xianyang import (
     resolve_video_position_map,
     scan_xianyang_videos,
 )
-from csd.perception.face_tracker import FaceTracker
 from csd.perception.head_pose import HeadPoseAnalyzer
+from csd.perception.visual_cache import (
+    cache_dir_for,
+    ensure_tracks,
+    load_visual_cache,
+    mesh_rows_to_frame_feature_rows,
+)
 from csd.social.position_speaker_mapper import PositionSpeakerMapper
 
 logger = logging.getLogger("prepare_readiness_xy")
@@ -88,6 +93,7 @@ def export_frame_features(
     frame_skip: int = 3,
     pre_pad_sec: float = 1.2,
     left_to_right: Optional[Sequence[str]] = None,
+    visual_cache_root: Optional[Path] = None,
 ) -> Tuple[pd.DataFrame, float, Dict[int, str]]:
     config = ASDConfig(
         frame_skip=frame_skip,
@@ -97,17 +103,62 @@ def export_frame_features(
         yolov8_face_model=os.environ.get("YOLOV8_FACE_WEIGHTS", ""),
         model_cache_dir=Path(os.environ.get("CSD_MODEL_CACHE", str(ROOT / "models"))),
     )
-    tracker = FaceTracker(config)
-    logger.info("人脸跟踪: %s", video)
-    tracker.process_video(str(video))
-    tracks, fps = tracker.tracks, tracker.fps
-
+    cache_root = Path(visual_cache_root) if visual_cache_root else (ROOT / "output" / "visual_cache")
     order = [str(s).upper() for s in (left_to_right or cameras)]
     if len(order) < 3:
         for s in ("S1", "S2", "S3"):
             if s not in order:
                 order.append(s)
-        order = order[:3]
+    order = order[:3]
+
+    # 优先：完整 mesh 缓存 → 直接得到头姿标量行
+    session_dir = cache_dir_for(video, cache_root)
+    mesh_path = session_dir / "mesh.npz"
+    if mesh_path.is_file():
+        bundle = load_visual_cache(session_dir)
+        rows = mesh_rows_to_frame_feature_rows(bundle)
+        if rows:
+            df = pd.DataFrame(rows).sort_values(["speaker", "t"]).reset_index(drop=True)
+            fps = float(bundle.fps)
+            slot_to_speaker = {
+                int(k): str(v)
+                for k, v in (bundle.meta.get("slot_to_speaker") or {}).items()
+            }
+            if not slot_to_speaker and "speaker" in df.columns:
+                # 从行反推
+                for _, r in df.drop_duplicates("slot_id").iterrows():
+                    slot_to_speaker[int(r["slot_id"])] = str(r["speaker"])
+            out_csv.parent.mkdir(parents=True, exist_ok=True)
+            df.to_csv(out_csv, index=False)
+            meta = {
+                "video": str(video),
+                "fps": fps,
+                "frame_skip": frame_skip,
+                "n_rows": len(df),
+                "cameras": list(cameras),
+                "slot_to_speaker": {str(k): v for k, v in slot_to_speaker.items()},
+                "speakers": sorted(df["speaker"].unique().tolist()) if len(df) else [],
+                "source": "visual_cache_mesh",
+                "visual_cache": str(session_dir),
+            }
+            out_csv.with_suffix(".meta.json").write_text(
+                json.dumps(meta, ensure_ascii=False, indent=2), encoding="utf-8"
+            )
+            logger.info("帧特征来自 visual_cache: %s (%d 行)", session_dir.name, len(df))
+            return df, fps, slot_to_speaker
+
+    # 其次：复用 tracks，再扫视频建 timeline
+    speech_intervals = [(max(0.0, s["start"] - pre_pad_sec), s["end"]) for s in segments]
+    tracks, fps, _ = ensure_tracks(
+        video,
+        cache_root,
+        config=config,
+        left_to_right=order,
+        speech_intervals=speech_intervals,
+        frame_skip=frame_skip,
+        write_full_cache=False,
+    )
+
     n_slots = int(getattr(config, "primary_group_n_slots", 3) or 3)
     n_slots = max(n_slots, len(order))
     mapper = PositionSpeakerMapper(config)
@@ -123,7 +174,6 @@ def export_frame_features(
     slot_positions = {s.cluster_id: (s.mean_x, s.mean_y) for s in slots}
     logger.info("槽位→说话人(左→中→右): %s | order=%s", slot_to_speaker, order)
 
-    speech_intervals = [(max(0.0, s["start"] - pre_pad_sec), s["end"]) for s in segments]
     analyzer = HeadPoseAnalyzer(config)
     timeline = analyzer.build_slot_timeline(
         str(video),
@@ -165,6 +215,8 @@ def export_frame_features(
         "cameras": list(cameras),
         "slot_to_speaker": {str(k): v for k, v in slot_to_speaker.items()},
         "speakers": sorted(df["speaker"].unique().tolist()) if len(df) else [],
+        "source": "tracks_cache_or_detect",
+        "visual_cache": str(session_dir),
     }
     out_csv.with_suffix(".meta.json").write_text(
         json.dumps(meta, ensure_ascii=False, indent=2), encoding="utf-8"
@@ -498,6 +550,7 @@ def process_one(
     position_map_paths: Optional[Sequence[Path]] = None,
     require_position_map: bool = False,
     require_video_start_abs: bool = True,
+    visual_cache_root: Optional[Path] = None,
 ) -> Optional[Path]:
     parsed = parse_xianyang_video_name(video.name)
     if parsed is None:
@@ -590,6 +643,7 @@ def process_one(
             feat_csv,
             frame_skip=frame_skip,
             left_to_right=left_to_right,
+            visual_cache_root=visual_cache_root,
         )
 
     feat_df = enrich_frame_features(feat_df)
@@ -721,6 +775,12 @@ def parse_args() -> argparse.Namespace:
         action="store_true",
         help="允许缺少 video_start_abs 的场次（默认：无首帧时间则跳过，不参与训练）",
     )
+    p.add_argument(
+        "--visual-cache-root",
+        type=Path,
+        default=ROOT / "output" / "visual_cache",
+        help="共享视觉缓存根目录（优先复用 mesh/tracks）",
+    )
     return p.parse_args()
 
 
@@ -808,6 +868,7 @@ def main() -> None:
                         position_map_paths=position_maps,
                         require_position_map=args.require_position_map,
                         require_video_start_abs=require_video_start_abs,
+                        visual_cache_root=args.visual_cache_root,
                     )
                 except Exception as exc:
                     logger.exception("处理失败，跳过继续: %s | %s", video.name, exc)
@@ -835,6 +896,7 @@ def main() -> None:
                 position_map_paths=position_maps,
                 require_position_map=args.require_position_map,
                 require_video_start_abs=require_video_start_abs,
+                visual_cache_root=args.visual_cache_root,
             )
         except Exception as exc:
             logger.exception("处理失败，跳过继续: %s | %s", video.name, exc)

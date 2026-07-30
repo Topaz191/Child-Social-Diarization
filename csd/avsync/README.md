@@ -11,11 +11,18 @@ python scripts/setup_mtdvocalist.py
 # 2) 索引视频（若尚无）
 python scripts/index_xianyang_dataset.py
 
+# 2.5) 可选：共享视觉缓存（轨迹/唇轮廓/视线），避免 prepare 重复检测
+# 详见 csd/perception/VISUAL_CACHE.md
+python scripts/extract_visual_cache_xianyang.py \
+  --from-manifest output/xianyang/manifest.json \
+  --require-position-map --skip-existing
+
 # 3) 弱标签样本 + 冻结特征（优先外置配套音频，含 audio/merged audio/）
 python scripts/prepare_avsync_xianyang.py \
   --from-manifest output/xianyang/manifest.json \
   --require-position-map \
-  --audio-root audio
+  --audio-root audio \
+  --visual-cache-root output/visual_cache
 
 # 4) 训下游匹配头
 python scripts/train_avsync_matcher.py --data-dir output/avsync_xianyang/merged_all

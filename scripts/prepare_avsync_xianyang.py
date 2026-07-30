@@ -41,7 +41,7 @@ from csd.data.xianyang import (
     resolve_video_position_map,
     scan_xianyang_videos,
 )
-from csd.perception.face_tracker import FaceTracker
+from csd.perception.visual_cache import ensure_tracks
 from csd.social.position_speaker_mapper import PositionSpeakerMapper
 
 logger = logging.getLogger("prepare_avsync")
@@ -65,14 +65,40 @@ def _assign_ltr(slots, cameras: Sequence[str]) -> Dict[int, str]:
 
 
 def _load_wav_np(wav_path: Path, sr: int = 16000) -> np.ndarray:
+    """读 mono float32；优先 soundfile/librosa，避免依赖带 CUDA 的 torchaudio。"""
+    try:
+        import soundfile as sf
+
+        data, s = sf.read(str(wav_path), always_2d=True, dtype="float32")
+        wf = data.mean(axis=1)
+        if int(s) != sr:
+            import librosa
+
+            wf = librosa.resample(wf, orig_sr=int(s), target_sr=sr)
+        return wf.astype(np.float32)
+    except Exception:
+        pass
+    try:
+        import librosa
+
+        wf, _ = librosa.load(str(wav_path), sr=sr, mono=True)
+        return wf.astype(np.float32)
+    except Exception:
+        pass
+    # 最后才试 torchaudio（部分环境因 libcudart 版本对不上会直接 import 失败）
     import torchaudio
 
     wf, s = torchaudio.load(str(wav_path))
     if wf.shape[0] > 1:
         wf = wf.mean(dim=0, keepdim=True)
-    if s != sr:
-        wf = torchaudio.transforms.Resample(s, sr)(wf)
+    if int(s) != sr:
+        wf = torchaudio.transforms.Resample(int(s), sr)(wf)
     return wf.squeeze(0).numpy().astype(np.float32)
+
+
+def _ffmpeg_to_16k_wav(src: Path, out_wav: Path) -> Optional[Path]:
+    """任意音视频 → 16k mono wav（不依赖 torchaudio）。"""
+    return extract_audio_ffmpeg(src, out_wav, sample_rate=16000)
 
 
 def _ensure_session_wav(
@@ -86,20 +112,21 @@ def _ensure_session_wav(
         return out_wav
     companion = resolve_companion_audio(video, audio_root=audio_root)
     if companion is not None:
-        # 统一落到 16k wav（若已是 wav 可直接复制/重采样）
+        out_wav.parent.mkdir(parents=True, exist_ok=True)
+        # 优先 ffmpeg：不依赖 torchaudio CUDA 运行时
+        if _ffmpeg_to_16k_wav(companion, out_wav) is not None:
+            logger.info("配套音频 → %s (from %s)", out_wav, companion)
+            return out_wav
         try:
-            import shutil
-
             import torchaudio
 
-            wf, sr = torchaudio.load(str(companion))
+            wf, s = torchaudio.load(str(companion))
             if wf.shape[0] > 1:
                 wf = wf.mean(dim=0, keepdim=True)
-            if int(sr) != 16000:
-                wf = torchaudio.transforms.Resample(int(sr), 16000)(wf)
-            out_wav.parent.mkdir(parents=True, exist_ok=True)
+            if int(s) != 16000:
+                wf = torchaudio.transforms.Resample(int(s), 16000)(wf)
             torchaudio.save(str(out_wav), wf, 16000)
-            logger.info("配套音频 → %s (from %s)", out_wav, companion)
+            logger.info("配套音频 → %s (from %s, torchaudio)", out_wav, companion)
             return out_wav
         except Exception as exc:
             logger.warning("配套音频转换失败，回退抽视频轨: %s | %s", companion, exc)
@@ -122,6 +149,7 @@ def process_one(
     max_windows_per_seg: int = 8,
     seed: int = 42,
     audio_root: Optional[Path] = None,
+    visual_cache_root: Optional[Path] = None,
 ) -> Optional[Path]:
     meta = parse_xianyang_video_name(video.name)
     if not meta:
@@ -158,9 +186,16 @@ def process_one(
     wav = _load_wav_np(wav_path)
 
     cfg = ASDConfig()
-    tracker = FaceTracker(cfg)
-    tracker.process_video(str(video))
-    tracks, fps = tracker.tracks, float(tracker.fps)
+    cache_root = visual_cache_root or (ROOT / "output" / "visual_cache")
+    tracks, fps, _cache_dir = ensure_tracks(
+        video,
+        cache_root,
+        config=cfg,
+        left_to_right=left_to_right,
+        speech_intervals=[(float(s["start"]), float(s["end"])) for s in segments],
+        frame_skip=int(getattr(cfg, "frame_skip", 3) or 3),
+        write_full_cache=False,
+    )
     mapper = PositionSpeakerMapper(cfg)
     slots = mapper.extract_position_slots(tracks, n_slots=3)
     slot_to_tracks = mapper._cluster_to_tracks(tracks, n_slots=3)
@@ -344,6 +379,12 @@ def parse_args() -> argparse.Namespace:
         default=None,
         help="配套音频根；默认搜 audio/（含 xianyang 与 merged audio）",
     )
+    p.add_argument(
+        "--visual-cache-root",
+        type=Path,
+        default=ROOT / "output" / "visual_cache",
+        help="共享视觉缓存根目录（优先复用 tracks.npz）",
+    )
     return p.parse_args()
 
 
@@ -389,6 +430,7 @@ def main() -> None:
                 position_map_paths=position_maps,
                 require_position_map=args.require_position_map,
                 audio_root=audio_root,
+                visual_cache_root=args.visual_cache_root,
             )
         except Exception as exc:
             logger.exception("失败 %s: %s", video.name, exc)
